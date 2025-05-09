@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Viewport meta tag -->
+  <title>Find Your Dream Job</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #f1f1f1;
+      display: flex;
+      flex-wrap: wrap;  /* Allow flexible layout */
+    }
+
+    .sidebar {
+      width: 100%;
+      background-color: #1f1f1f;
+      padding: 20px;
+      border-right: 1px solid #333;
+      box-sizing: border-box;
+    }
+
+    .sidebar h3 {
+      color: #ffc107;
+    }
+
+    .main {
+      flex: 1;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #ffc107;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      background-color: #1e1e1e;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #ffc107;
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e0a800;
+    }
+
+    .job-listings {
+      margin-top: 30px;
+    }
+
+    .job-card {
+      background-color: #1e1e1e;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+
+    .job-card a {
+      color: #ffc107;
+      text-decoration: none;
+    }
+
+    .job-card a:hover {
+      text-decoration: underline;
+    }
+
+    /* Media Queries for Responsive Design */
+    @media (max-width: 1200px) {
+      .main {
+        padding: 30px;
+      }
+      .sidebar {
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid #333;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        padding: 15px;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      button {
+        padding: 8px 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      label, select, input, button {
+        font-size: 0.9rem;
+      }
+
+      .main {
+        padding: 15px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h3>Job Seeker</h3>
+  </div>
+
+  <div class="main">
+    <h1>Find Your Dream Job</h1>
+
+    <label for="experience">Experience Level</label>
+    <select id="experience">
+      <option>Entry</option>
+      <option>Mid</option>
+      <option>Senior</option>
+    </select>
+
+    <label for="jobType">Type of Job</label>
+    <select id="jobType">
+      <option>Full-time</option>
+      <option>Part-time</option>
+      <option>Remote</option>
+      <option>Internship</option>
+    </select>
+
+    <label for="location">Location</label>
+    <select id="location">
+      <option value="india">India</option>
+      <option value="united states">United States</option>
+      <option value="united kingdom">United Kingdom</option>
+      <option value="australia">Australia</option>
+      <option value="canada">Canada</option>
+      <option value="germany">Germany</option>
+    </select>
+
+    <label for="resultsPerPage">Number of Postings</label>
+    <select id="resultsPerPage">
+      <option>5</option>
+      <option selected>10</option>
+      <option>15</option>
+      <option>20</option>
+    </select>
+
+    <label for="role">Role</label>
+    <select id="role">
+      <option>Software Engineer</option>
+      <option>Data Analyst</option>
+      <option>Web Developer</option>
+      <option>Project Manager</option>
+      <option>Graphic Designer</option>
+      <option>Digital Marketer</option>
+      <option>Customer Support Executive</option>
+      <option>Cybersecurity Specialist</option>
+    </select>
+
+    <button onclick="fetchJobs()">Find Jobs</button>
+
+    <div class="job-listings" id="jobListings"></div>
+  </div>
+
+  <script>
+    function fetchJobs() {
+      const location = document.getElementById("location").value;
+      const role = document.getElementById("jobType").value;
+      const resultsPerPage = document.getElementById("resultsPerPage").value;
+
+      fetch("/get_jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: role,
+          location: location,
+          results_per_page: resultsPerPage
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("jobListings");
+        container.innerHTML = "";
+
+        if (data.error || data.message) {
+          container.innerHTML = `<p>${data.error || data.message}</p>`;
+          return;
+        }
+
+        data.forEach(job => {
+          const card = document.createElement("div");
+          card.className = "job-card";
+          card.innerHTML = `
+            <h3>${job.title}</h3>
+            <p><strong>Company:</strong> ${job.company.display_name}</p>
+            <p><strong>Location:</strong> ${job.location.display_name}</p>
+            <a href="${job.redirect_url}" target="_blank">Apply on Site</a>
+          `;
+          container.appendChild(card);
+        });
+      });
+    }
+  </script>
+
+</body>
+</html>
