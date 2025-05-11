@@ -11,10 +11,9 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# Adzuna API Config
 ADZUNA_API_URL = "https://api.adzuna.com/v1/api/jobs"
-APP_ID = "82916c82"
-APP_KEY = "1bbbd36d21b6b11e346a89f3a609ecd7"
+APP_ID = os.environ.get("ADZUNA_API_ID")  # Get API ID from environment variable
+APP_KEY = os.environ.get("ADZUNA_API_KEY")  # Get API Key from environment variable
 
 # Upload Folder for Resume Matching
 UPLOAD_FOLDER = 'uploads'
