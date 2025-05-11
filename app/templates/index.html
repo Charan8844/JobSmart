@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Viewport meta tag -->
-  <title>Find Your Dream Job</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JobSmart - Unified</title>
   <style>
     body {
       margin: 0;
@@ -11,30 +11,53 @@
       background-color: #121212;
       color: #f1f1f1;
       display: flex;
-      flex-wrap: wrap;  /* Allow flexible layout */
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
     }
 
     .sidebar {
-      width: 100%;
+      width: 220px;
       background-color: #1f1f1f;
       padding: 20px;
-      border-right: 1px solid #333;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #333;
     }
 
-    .sidebar h3 {
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffc107;
+      margin-bottom: 30px;
+    }
+
+    .menu a {
+      color: #f1f1f1;
+      text-decoration: none;
+      margin: 10px 0;
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background-color: #333;
       color: #ffc107;
     }
 
     .main {
       flex: 1;
       padding: 40px;
-      box-sizing: border-box;
-    }
-
-    h1 {
-      color: #ffc107;
-      margin-bottom: 20px;
+      overflow-y: auto;
     }
 
     label {
@@ -42,7 +65,7 @@
       margin-top: 15px;
     }
 
-    select, input {
+    select, input[type="file"], textarea {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -87,150 +110,251 @@
       text-decoration: underline;
     }
 
-    /* Media Queries for Responsive Design */
-    @media (max-width: 1200px) {
+    h1 {
+      color: #ffc107;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      font-size: 1.2rem;
+      height: 150px;
+    }
+
+    .result {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .result h2 {
+      font-size: 1.5rem;
+      color: #32cd32;
+    }
+
+    .result p {
+      font-size: 1.2rem;
+    }
+
+    .match-percentage {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .suggestions {
+      font-size: 1.1rem;
+      color: #ff6347;
+      margin-top: 10px;
+    }
+
+    .resume-links a {
+      color: #00bfff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      display: block;
+      padding: 10px 15px;
+      background-color: #1a1a1a;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .resume-links a:hover {
+      background-color: #2a2a2a;
+      text-decoration: underline;
+    }
+
+    .resume-links {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .resume-links h3 {
+      color: #ffc107;
+    }
+
+    @media (max-width: 1024px) {
       .main {
         padding: 30px;
-      }
-      .sidebar {
-        width: 100%;
-        text-align: center;
-        border-bottom: 1px solid #333;
       }
     }
 
     @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
       .sidebar {
-        padding: 15px;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        border-bottom: 1px solid #333;
+        padding: 10px;
+      }
+
+      .menu {
+        display: flex;
+        gap: 10px;
+      }
+
+      .menu a {
+        margin: 0;
+        padding: 10px 15px;
       }
 
       .main {
         padding: 20px;
       }
-
-      h1 {
-        font-size: 1.5rem;
-      }
-
-      button {
-        padding: 8px 16px;
-      }
     }
-
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.2rem;
-      }
-
-      label, select, input, button {
-        font-size: 0.9rem;
-      }
-
-      .main {
-        padding: 15px;
-      }
-    }
-
   </style>
 </head>
 <body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="logo">JobSmart</div>
+      <div class="menu">
+        <a id="jobSeekerTab" class="active" onclick="showSection('jobSeeker')">Job Seeker</a>
+        <a id="resumeCheckerTab" onclick="showSection('resumeChecker')">Resume Checker</a>
+      </div>
+    </div>
 
-  <div class="sidebar">
-    <h3>Job Seeker</h3>
-  </div>
+    <div class="main">
+      <!-- Job Seeker Section -->
+      <div id="jobSeekerSection">
+        <h1>Find Your Dream Job</h1>
 
-  <div class="main">
-    <h1>Find Your Dream Job</h1>
+        <label for="jobType">Type of Job</label>
+        <select id="jobType">
+          <option>Full-time</option>
+          <option>Part-time</option>
+          <option>Remote</option>
+          <option>Internship</option>
+        </select>
 
-    <label for="experience">Experience Level</label>
-    <select id="experience">
-      <option>Entry</option>
-      <option>Mid</option>
-      <option>Senior</option>
-    </select>
+        <label for="location">Location</label>
+        <select id="location">
+          <option value="india">India</option>
+          <option value="united states">United States</option>
+          <option value="united kingdom">United Kingdom</option>
+          <option value="australia">Australia</option>
+          <option value="canada">Canada</option>
+          <option value="germany">Germany</option>
+        </select>
 
-    <label for="jobType">Type of Job</label>
-    <select id="jobType">
-      <option>Full-time</option>
-      <option>Part-time</option>
-      <option>Remote</option>
-      <option>Internship</option>
-    </select>
+        <label for="resultsPerPage">Number of Postings</label>
+        <select id="resultsPerPage">
+          <option>5</option>
+          <option selected>10</option>
+          <option>15</option>
+          <option>20</option>
+        </select>
 
-    <label for="location">Location</label>
-    <select id="location">
-      <option value="india">India</option>
-      <option value="united states">United States</option>
-      <option value="united kingdom">United Kingdom</option>
-      <option value="australia">Australia</option>
-      <option value="canada">Canada</option>
-      <option value="germany">Germany</option>
-    </select>
+        <label for="role">Role</label>
+        <select id="role">
+          <option>Software Engineer</option>
+          <option>Data Analyst</option>
+          <option>Web Developer</option>
+          <option>Project Manager</option>
+          <option>Graphic Designer</option>
+          <option>Digital Marketer</option>
+          <option>Customer Support Executive</option>
+          <option>Cybersecurity Specialist</option>
+        </select>
 
-    <label for="resultsPerPage">Number of Postings</label>
-    <select id="resultsPerPage">
-      <option>5</option>
-      <option selected>10</option>
-      <option>15</option>
-      <option>20</option>
-    </select>
+        <button onclick="fetchJobs()">Find Jobs</button>
 
-    <label for="role">Role</label>
-    <select id="role">
-      <option>Software Engineer</option>
-      <option>Data Analyst</option>
-      <option>Web Developer</option>
-      <option>Project Manager</option>
-      <option>Graphic Designer</option>
-      <option>Digital Marketer</option>
-      <option>Customer Support Executive</option>
-      <option>Cybersecurity Specialist</option>
-    </select>
+        <div class="job-listings" id="jobListings"></div>
+      </div>
 
-    <button onclick="fetchJobs()">Find Jobs</button>
+      <!-- Resume Checker Section -->
+      <div id="resumeCheckerSection" style="display: none;">
+        <h1>Upload Your Resume and Job Description</h1>
+        <form id="resumeForm" method="POST" enctype="multipart/form-data" action="/resume_checker">
 
-    <div class="job-listings" id="jobListings"></div>
+          <label for="resume">Choose Resume (PDF or DOCX):</label>
+          <input type="file" name="resume" id="resume" required>
+
+          <label for="job_description">Job Description:</label>
+          <textarea name="job_description" id="job_description" placeholder="Paste job description here..." required></textarea>
+
+          <button type="submit">Submit</button>
+
+          <div id="matchResult" class="result" style="display: none;">
+            <h2>Match Result: <span id="matchResultText"></span></h2>
+            <p>Match Percentage: <span id="matchPercentage"></span>%</p>
+            <p id="suggestions"></p>
+            <div id="resumeLinks"></div>
+          </div>
+
+        </form>
+      </div>
+    </div>
   </div>
 
   <script>
-    function fetchJobs() {
-      const location = document.getElementById("location").value;
-      const role = document.getElementById("jobType").value;
-      const resultsPerPage = document.getElementById("resultsPerPage").value;
+    function showSection(section) {
+      const jobTab = document.getElementById("jobSeekerTab");
+      const resumeTab = document.getElementById("resumeCheckerTab");
+      const jobSec = document.getElementById("jobSeekerSection");
+      const resumeSec = document.getElementById("resumeCheckerSection");
 
-      fetch("/get_jobs", {
+      if (section === 'jobSeeker') {
+        jobSec.style.display = 'block';
+        resumeSec.style.display = 'none';
+        jobTab.classList.add('active');
+        resumeTab.classList.remove('active');
+      } else {
+        jobSec.style.display = 'none';
+        resumeSec.style.display = 'block';
+        jobTab.classList.remove('active');
+        resumeTab.classList.add('active');
+      }
+    }
+
+    document.getElementById("resumeForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+
+      fetch("/resume_checker", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          role: role,
-          location: location,
-          results_per_page: resultsPerPage
-        })
+        body: formData
       })
       .then(res => res.json())
       .then(data => {
-        const container = document.getElementById("jobListings");
-        container.innerHTML = "";
-
-        if (data.error || data.message) {
-          container.innerHTML = `<p>${data.error || data.message}</p>`;
-          return;
+        if (data.error) {
+          alert(data.error);
+        } else {
+          displayMatchResults(data);
         }
+      });
+    });
 
-        data.forEach(job => {
-          const card = document.createElement("div");
-          card.className = "job-card";
-          card.innerHTML = `
-            <h3>${job.title}</h3>
-            <p><strong>Company:</strong> ${job.company.display_name}</p>
-            <p><strong>Location:</strong> ${job.location.display_name}</p>
-            <a href="${job.redirect_url}" target="_blank">Apply on Site</a>
-          `;
-          container.appendChild(card);
-        });
+    function displayMatchResults(data) {
+      const resultDiv = document.getElementById("matchResult");
+      const resultText = document.getElementById("matchResultText");
+      const matchPercentage = document.getElementById("matchPercentage");
+      const suggestions = document.getElementById("suggestions");
+      const resumeLinks = document.getElementById("resumeLinks");
+
+      resultDiv.style.display = 'block';
+      resultText.textContent = data.result;
+      matchPercentage.textContent = data.match_percentage;
+      suggestions.textContent = data.suggestions;
+
+      resumeLinks.innerHTML = '';
+      resumeLinks.className = "resume-links";
+
+      const heading = document.createElement("h3");
+      heading.textContent = "These are some websites where you can build a strong resume:";
+      resumeLinks.appendChild(heading);
+
+      data.resume_links.forEach(link => {
+        const a = document.createElement("a");
+        a.href = link.url;
+        a.target = "_blank";
+        a.innerHTML = link.name;
+        resumeLinks.appendChild(a);
       });
     }
   </script>
-
 </body>
 </html>
